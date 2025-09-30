@@ -10,7 +10,9 @@ export const useSocket = () => {
 
 export const SocketProvider = (props) => {
 
-    const socket = useMemo(() => io('localhost:8000'), []);
+    const socketUrl = process.env.BASE_URL;
+
+    const socket = useMemo(() => io(socketUrl), []);
 
     return (
         <SocketContext.Provider value={socket}>
