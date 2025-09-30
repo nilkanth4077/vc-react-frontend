@@ -12,12 +12,13 @@ const LobbyScreen = () => {
 
     const handleSubmitForm = useCallback((e) => {
         e.preventDefault();
+        // console.log(`Got form with ${room} and ${email}`);
         socket.emit('room:join', { email, room });
     }, [email, room, socket]);
 
     const handleRoomJoin = useCallback((data) => {
         const { email, room } = data;
-        // console.log(`Joined room ${room} as ${email}`);
+        // console.log(`Joined room ${room} as ${emaiwebsocket, pollingl}`);
         navigate(`/room/${room}`, { state: { myEmail: email } });
     },
         [navigate]
