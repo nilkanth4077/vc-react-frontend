@@ -1,11 +1,14 @@
 import React, { useEffect, useCallback, useState, use } from "react";
-import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash } from "react-icons/fa";
+import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash, FaPhoneSlash } from "react-icons/fa";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
 import VideoPlayer from "./VideoPlayer";
-import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const RoomScreen = () => {
+
+    const navigate = useNavigate();
     const socket = useSocket();
     const [remoteSocketId, setRemoteSocketId] = useState(null);
     const [myStream, setMyStream] = useState();
@@ -106,6 +109,11 @@ const RoomScreen = () => {
         }
     };
 
+    const handleCallEnd = () => {
+        myStream.getTracks().forEach((track) => track.stop());
+        navigate('/')
+    };
+
     useEffect(() => {
         peer.peer.addEventListener("track", async (ev) => {
             const remoteStream = ev.streams;
@@ -139,12 +147,29 @@ const RoomScreen = () => {
 
     return (
         <div>
-            <h1>Room Page</h1>
-            <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-            {myStream && <button onClick={sendStreams}>Send Stream</button>}
-            {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
+            <h4 className="text-2xl font-semibold m-3">
+                {remoteSocketId ?
+                    "Peer is waiting for you to start the call....." :
+                    "Wait for your peer to join the room....."}
+            </h4>
+            {myStream &&
+                <button
+                    onClick={sendStreams}
+                    className="bg-blue-500 hover:bg-blue-700 cursor-pointer text-white font-bold py-2 px-4 rounded"
+                >
+                    JOIN
+                </button>
+            }
+            {remoteSocketId &&
+                <button
+                    onClick={handleCallUser}
+                    className="bg-green-500 hover:bg-green-700 cursor-pointer text-white font-bold py-2 px-4 rounded"
+                >
+                    CALL
+                </button>
+            }
 
-            {myStream && (
+            {/* {myStream && (
                 <div className="control-bar">
                     <button onClick={toggleAudio} className={`control-btn ${isAudioOn ? "on" : "off"}`}>
                         {isAudioOn ? <FaMicrophone /> : <FaMicrophoneSlash />}
@@ -168,7 +193,57 @@ const RoomScreen = () => {
                         <VideoPlayer stream={remoteStream} muted={false} />
                     </div>
                 )}
+            </div> */}
+
+            <div className="room-container">
+                {remoteStream ? (
+                    <>
+                        {/* Peer Video Fullscreen */}
+                        <div className="peer-video">
+                            <VideoPlayer stream={remoteStream} muted={false} />
+                        </div>
+
+                        {/* My Video Overlay */}
+                        {myStream && (
+                            <div className="my-video-overlay">
+                                <VideoPlayer stream={myStream} muted={true} />
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    // Peer not joined yet → show my video full screen
+                    myStream && (
+                        <div className="my-video-fullscreen">
+                            <VideoPlayer stream={myStream} muted={true} />
+                        </div>
+                    )
+                )}
+
+                {/* Control bar */}
+                {myStream && (
+                    <div className="control-bar">
+                        <button
+                            onClick={toggleAudio}
+                            className={`control-btn ${isAudioOn ? "on" : "off"}`}
+                        >
+                            {isAudioOn ? <FaMicrophone /> : <FaMicrophoneSlash />}
+                        </button>
+                        <button
+                            onClick={toggleVideo}
+                            className={`control-btn ${isVideoOn ? "on" : "off"}`}
+                        >
+                            {isVideoOn ? <FaVideo /> : <FaVideoSlash />}
+                        </button>
+                        <button
+                            onClick={handleCallEnd}
+                            className={`control-btn end-call-btn ${isVideoOn ? "on" : "off"}`}
+                        >
+                            <FaPhoneSlash />
+                        </button>
+                    </div>
+                )}
             </div>
+
         </div>
     );
 };

@@ -33,28 +33,57 @@ const LobbyScreen = () => {
 
     return (
         <>
-            <h1>Lobby</h1>
-            <form onSubmit={handleSubmitForm}>
-                <label htmlFor="email">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                />
-                <br />
-                <label htmlFor="room">Room No:</label>
-                <input
-                    type="text"
-                    id="room"
-                    value={room}
-                    onChange={(e) => setRoom(e.target.value)}
-                    placeholder="Room"
-                />
-                <br />
-                <button type="submit">Join</button>
-            </form>
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br">
+                <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md sm:max-w-lg md:max-w-xl">
+                    <h1 className="text-4xl font-bold mb-8 text-gray-800 text-center">Lobby</h1>
+
+                    <form onSubmit={handleSubmitForm} className="space-y-6">
+                        <div>
+                            <label
+                                htmlFor="email"
+                                className="block text-start text-gray-700 font-semibold mb-2"
+                            >
+                                Email:
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="room"
+                                className="block text-start text-gray-700 font-semibold mb-2"
+                            >
+                                Room No:
+                            </label>
+                            <input
+                                type="text"
+                                id="room"
+                                value={room}
+                                onChange={(e) => setRoom(e.target.value)}
+                                placeholder="Enter room number"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
+                        >
+                            Join
+                        </button>
+                    </form>
+                    <p className='mt-5'>Go to <a href='/' className='font-bold cursor-pointer'>Homepage</a></p>
+                </div>
+            </div>
         </>
     )
 }

@@ -13,7 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.room-container {
+/* .room-container {
   padding: 1rem;
   text-align: center;
 }
@@ -57,3 +57,84 @@
     aspect-ratio: 4 / 3;
   }
 }
+
+*/ .room-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background-color: black;
+  overflow: hidden;
+}
+
+/* Peer video fullscreen */
+.peer-video {
+  width: 100%;
+  height: 100%;
+}
+
+.peer-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* My video overlay */
+.my-video-overlay {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 25%;
+  /* small corner */
+  aspect-ratio: 16/9;
+  border: 2px solid white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.my-video-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* My video fullscreen when peer not joined */
+.my-video-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.my-video-fullscreen video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Control bar at bottom center */
+.control-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+}
+
+.control-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.control-btn.off {
+  background: rgba(255, 0, 0, 0.6);
+}
+
+.end-call-btn {
+  background: rgba(255, 0, 0, 0.6);
+}
+
+@import "tailwindcss";
