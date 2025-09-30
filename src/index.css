@@ -1,0 +1,59 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #000000;
+  background-color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.room-container {
+  padding: 1rem;
+  text-align: center;
+}
+
+.video-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.video-box {
+  flex: 1 1 300px;
+  max-width: 500px;
+}
+
+.video-player {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: black;
+  aspect-ratio: 16 / 9;
+}
+
+/* Tablet view */
+@media (max-width: 768px) {
+  .video-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .video-box {
+    max-width: 100%;
+  }
+}
+
+/* Mobile view */
+@media (max-width: 480px) {
+  .video-player {
+    aspect-ratio: 4 / 3;
+  }
+}
