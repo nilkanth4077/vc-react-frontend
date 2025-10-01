@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState, use } from "react";
-import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash, FaPhoneSlash } from "react-icons/fa";
+import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash, FaPhoneSlash, FaDesktop } from "react-icons/fa";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
 import VideoPlayer from "./VideoPlayer";
@@ -14,6 +14,7 @@ const RoomScreen = () => {
     const [myStream, setMyStream] = useState();
     const [remoteStream, setRemoteStream] = useState();
     const [remoteEmail, setRemoteEmail] = useState("");
+    const [mainStream, setMainStream] = useState("remote");
 
     const [isAudioOn, setIsAudioOn] = useState(true);
     const [isVideoOn, setIsVideoOn] = useState(true);
@@ -109,9 +110,30 @@ const RoomScreen = () => {
         }
     };
 
+    const togglrScreenShare = async () => {
+        let mediaStream = null;
+        try {
+            mediaStream = await navigator.mediaDevices.getDisplayMedia({
+                video: {
+                    cursor: "always"
+                },
+                audio: false
+            });
+            document.getElementById("local-video").srcObject = mediaStream;
+        } catch (ex) {
+            console.log("Error occurred", ex);
+        }
+    };
+
     const handleCallEnd = () => {
         myStream.getTracks().forEach((track) => track.stop());
         navigate('/')
+    };
+
+    const activeMain = remoteStream ? mainStream : "me";
+
+    const handleSwap = () => {
+        setMainStream((prev) => (prev === "me" ? "remote" : "me"));
     };
 
     useEffect(() => {
@@ -149,7 +171,7 @@ const RoomScreen = () => {
         <div>
             <h4 className="text-2xl font-semibold m-3">
                 {remoteSocketId ?
-                    "Peer is waiting for you to start the call....." :
+                    "Peer is waiting for you to join the call....." :
                     "Wait for your peer to join the room....."}
             </h4>
             {myStream &&
@@ -198,12 +220,10 @@ const RoomScreen = () => {
             <div className="room-container">
                 {remoteStream ? (
                     <>
-                        {/* Peer Video Fullscreen */}
                         <div className="peer-video">
                             <VideoPlayer stream={remoteStream} muted={false} />
                         </div>
 
-                        {/* My Video Overlay */}
                         {myStream && (
                             <div className="my-video-overlay">
                                 <VideoPlayer stream={myStream} muted={true} />
@@ -211,7 +231,6 @@ const RoomScreen = () => {
                         )}
                     </>
                 ) : (
-                    // Peer not joined yet → show my video full screen
                     myStream && (
                         <div className="my-video-fullscreen">
                             <VideoPlayer stream={myStream} muted={true} />
@@ -219,7 +238,6 @@ const RoomScreen = () => {
                     )
                 )}
 
-                {/* Control bar */}
                 {myStream && (
                     <div className="control-bar">
                         <button
@@ -233,6 +251,12 @@ const RoomScreen = () => {
                             className={`control-btn ${isVideoOn ? "on" : "off"}`}
                         >
                             {isVideoOn ? <FaVideo /> : <FaVideoSlash />}
+                        </button>
+                        <button
+                            onClick={togglrScreenShare}
+                            className={`control-btn ${isVideoOn ? "on" : "off"}`}
+                        >
+                            <FaDesktop />
                         </button>
                         <button
                             onClick={handleCallEnd}
