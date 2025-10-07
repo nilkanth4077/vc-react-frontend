@@ -68,7 +68,7 @@ const LobbyScreen = () => {
                                 id="room"
                                 value={room}
                                 onChange={(e) => setRoom(e.target.value)}
-                                placeholder="Enter room id from yur email"
+                                placeholder="Enter room id from your email"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
