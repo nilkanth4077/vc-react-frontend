@@ -61,14 +61,14 @@ const LobbyScreen = () => {
                                 htmlFor="room"
                                 className="block text-start text-gray-700 font-semibold mb-2"
                             >
-                                Room No:
+                                Room ID:
                             </label>
                             <input
                                 type="text"
                                 id="room"
                                 value={room}
                                 onChange={(e) => setRoom(e.target.value)}
-                                placeholder="Enter room number"
+                                placeholder="Enter room id from your email"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
@@ -81,7 +81,7 @@ const LobbyScreen = () => {
                             Join
                         </button>
                     </form>
-                    <p className='mt-5'>Go to <a href='/' className='font-bold cursor-pointer'>Homepage</a></p>
+                    <p className='mt-5'>Go to <a href='https://healthcare-frontend-omega.vercel.app/' className='font-bold cursor-pointer'>Homepage</a></p>
                 </div>
             </div>
         </>
