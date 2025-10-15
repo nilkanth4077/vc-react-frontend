@@ -14,6 +14,7 @@ const RoomScreen = () => {
     const [myStream, setMyStream] = useState();
     const [remoteStream, setRemoteStream] = useState();
     const [remoteEmail, setRemoteEmail] = useState("");
+    const [bothJoined, setBothJoined] = useState(false);
     const [mainStream, setMainStream] = useState("remote");
 
     const [isAudioOn, setIsAudioOn] = useState(true);
@@ -26,6 +27,8 @@ const RoomScreen = () => {
         console.log(`Email ${email} joined room`);
         setRemoteEmail(email);
         setRemoteSocketId(id);
+        setBothJoined(true);
+        toast.info(`${email} joined the room!`);
     }, []);
 
     const handleCallUser = useCallback(async () => {
@@ -58,6 +61,19 @@ const RoomScreen = () => {
             peer.peer.addTrack(track, myStream);
         }
     }, [myStream]);
+
+    const handleJoinCall = useCallback(async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+        });
+        setMyStream(stream);
+
+        if (remoteSocketId) {
+            const offer = await peer.getOffer();
+            socket.emit("user:call", { to: remoteSocketId, offer });
+        }
+    }, [remoteSocketId, socket]);
 
     const handleCallAccepted = useCallback(
         ({ from, ans }) => {
@@ -169,7 +185,25 @@ const RoomScreen = () => {
 
     return (
         <div>
+
             <h4 className="text-2xl font-semibold m-3">
+                {!remoteSocketId
+                    ? "Wait for your peer to join the room..."
+                    : bothJoined
+                        ? "Your peer is here! Click below to start the call."
+                        : "Peer joined. Preparing call..."}
+            </h4>
+
+            {bothJoined && (
+                <button
+                    onClick={handleJoinCall}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Join Call
+                </button>
+            )}
+
+            {/* <h4 className="text-2xl font-semibold m-3">
                 {remoteSocketId ?
                     "Peer is waiting for you to join the call....." :
                     "Wait for your peer to join the room....."}
@@ -189,7 +223,7 @@ const RoomScreen = () => {
                 >
                     CALL
                 </button>
-            }
+            } */}
 
             {/* {myStream && (
                 <div className="control-bar">
